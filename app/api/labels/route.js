@@ -33,25 +33,22 @@ export async function GET(request) {
       return jsonError("Unauthorized: No token provided", 401);
     }
 
-    const decodedToken = await verifyFirebaseToken(token);
+    const authResult = await verifyFirebaseToken(token);
 
-    if (!decodedToken) {
-      return jsonError("Unauthorized: Invalid token", 401);
+    if (!authResult.valid) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+          reason: authResult.reason,
+        },
+        { status: 401 }
+      );
     }
 
-    // 3. Fetch Data with Projection, Search Filtering & Bounded Results
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get("search")?.trim() || "";
+    const decodedToken = authResult.decodedToken;
 
-    const query = search
-      ? {
-          $or: [
-            { name: { $regex: search, $options: "i" } },
-            { email: { $regex: search, $options: "i" } },
-          ],
-        }
-      : {};
 
+    // 3. Fetch Data with Projection
     const db = await connectDb();
     const users = db.collection("users");
 
