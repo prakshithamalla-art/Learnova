@@ -251,7 +251,7 @@ const CodeBlock = ({ language, code }) => {
 // ---------------------------------------------------------------------------
 const markdownComponents = {
   p: ({ children }) => (
-    <p className="my-2 text-sm leading-relaxed text-gray-200 last:mb-0">{children}</p>
+    <p className="my-2 text-sm leading-relaxed text-black dark:text-white last:mb-0">{children}</p>
   ),
   strong: ({ children }) => (
     <strong className="font-semibold text-purple-400">{children}</strong>
