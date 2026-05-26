@@ -83,19 +83,17 @@ function NavLink({ href, label, isActive }) {
         />
       )}
       <span className="absolute inset-0 rounded-xl bg-zinc-200/0 group-hover:bg-zinc-200/60 dark:group-hover:bg-white/5 transition-colors duration-300 ease-out" />
-      <span className={`relative z-10 ${
-        isActive
+      <span className={`relative z-10 ${isActive
           ? "text-blue-600 dark:text-blue-400"
           : "text-zinc-700 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-300"
-      }`}>
+        }`}>
         {label}
       </span>
       <span
-        className={`absolute bottom-1 left-3 right-3 h-[3px] origin-center rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 shadow-sm shadow-blue-500/30 transition-all duration-300 ease-out ${
-          isActive
+        className={`absolute bottom-1 left-3 right-3 h-[3px] origin-center rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-violet-500 shadow-sm shadow-blue-500/30 transition-all duration-300 ease-out ${isActive
             ? "scale-x-100 opacity-100"
             : "scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-90"
-        }`}
+          }`}
       />
     </Link>
   );
@@ -193,26 +191,26 @@ export function Navbar() {
 
   const getDashboardLink = () => {
     switch (userProfile?.role) {
-      case "student":   return "/student/dashboard";
-      case "teacher":   return "/teacher/dashboard";
+      case "student": return "/student/dashboard";
+      case "teacher": return "/teacher/dashboard";
       case "institute": return "/institute/dashboard";
-      case "admin":     return "/admin/dashboard";
-      default:          return "/profile";
+      case "admin": return "/admin/dashboard";
+      default: return "/profile";
     }
   };
 
   const navigationItems = [
-    { href: "/",            label: "Home",       icon: Home },
-    { href: "/productivity",label: "Focus",      icon: Sparkles },
-    { href: "/activity",    label: "Activities", icon: Activity },
-    { href: "/complaints",  label: "Complaints", icon: MessageSquareWarning },
-    { href: "/contact",     label: "Contact",    icon: Mail },
+    { href: "/", label: "Home", icon: Home },
+    { href: "/productivity", label: "Focus", icon: Sparkles },
+    { href: "/activity", label: "Activities", icon: Activity },
+    { href: "/complaints", label: "Complaints", icon: MessageSquareWarning },
+    { href: "/contact", label: "Contact", icon: Mail },
   ];
 
   const userMenuItems = [
-    { href: "/profile",       icon: User,     label: "Profile",   key: "profile" },
-    { href: getDashboardLink(),icon: Activity, label: "Dashboard", key: "dashboard" },
-    { href: "/settings",      icon: Settings, label: "Settings",  key: "settings" },
+    { href: "/profile", icon: User, label: "Profile", key: "profile" },
+    { href: getDashboardLink(), icon: Activity, label: "Dashboard", key: "dashboard" },
+    { href: "/settings", icon: Settings, label: "Settings", key: "settings" },
   ].filter((item) => !(item.key === "dashboard" && item.href === "/profile"));
   const handleImageError = (e) => {
     const img = e.target;
@@ -233,7 +231,7 @@ export function Navbar() {
       : scrolled ? "rgba(255,255,255,0.94)" : "rgba(255,255,255,0.72)",
     borderBottom: isDark
       ? scrolled ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(255,255,255,0.05)"
-      : scrolled ? "1px solid rgba(0,0,0,0.07)"       : "1px solid rgba(0,0,0,0.04)",
+      : scrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid rgba(0,0,0,0.04)",
     boxShadow: scrolled
       ? isDark
         ? "0 4px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.04) inset"
@@ -370,16 +368,34 @@ export function Navbar() {
                       className={iconBtn}
                       aria-label="Notifications"
                     >
-                      <Bell className="h-[18px] w-[18px]" />
-                      <AnimatePresence>
-                        {unreadCount > 0 && (
-                          <motion.span
-                            initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                            className="absolute top-1.5 right-1.5 bg-red-500 rounded-full h-2 w-2 ring-2 ring-white dark:ring-zinc-950"
-                          />
-                        )}
-                      </AnimatePresence>
+
+                      <Bell className="h-5 w-5" />
+                      {unreadCount > 0 && <span className="absolute top-2 right-2 bg-red-500 rounded-full h-2 w-2" />}
                     </motion.button>
+
+                    {isNotificationOpen && (
+                      <div className="absolute right-0 mt-3 w-72 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl z-[80] overflow-hidden">
+                        <div className="p-3 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-zinc-50 dark:bg-zinc-900/50">
+                          <h3 className="text-zinc-900 dark:text-zinc-100 font-bold text-sm">Notifications</h3>
+                          {unreadCount > 0 && (
+                            <button onClick={markAllAsRead} aria-label="Mark all notifications as read" className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                              Mark all as read
+                            </button>
+                          )}
+                        </div>
+                        <div className="max-h-60 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-900">
+                          {notifications.length === 0 ? (
+                            <div className="p-4 text-center text-sm text-zinc-400">No new notices</div>
+                          ) : (
+                            notifications.map((n) => (
+                              <div key={n.id} onClick={() => markAsRead(n.id)} className={`p-3 text-left cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900/40 ${!n.read ? "bg-blue-50/30" : ""}`}>
+                                <p className="text-sm text-zinc-800 dark:text-zinc-200 line-clamp-2">{n.message}</p>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     <AnimatePresence>
                       {isNotificationOpen && (
@@ -415,11 +431,13 @@ export function Navbar() {
                         </motion.div>
                       )}
                     </AnimatePresence>
+
                   </div>
 
                   {/* Profile Dropdown */}
                   <div className="relative" ref={dropdownRef}>
                     <motion.button
+                      type="button"
                       whileHover={{ scale: 1.04 }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => {
@@ -429,6 +447,8 @@ export function Navbar() {
                       className="flex items-center gap-2 p-1.5 pl-2 pr-3 rounded-xl hover:bg-zinc-100/80 dark:hover:bg-white/6 border border-transparent hover:border-zinc-200/50 dark:hover:border-white/8 transition-all duration-200"
                       aria-haspopup="true"
                       aria-expanded={isDropdownOpen}
+                      aria-controls="profile-menu"
+                      aria-label="Toggle profile menu"
                     >
                       <div className="relative w-7 h-7 shrink-0">
                         {getUserPhoto() ? (
@@ -445,6 +465,23 @@ export function Navbar() {
                         )}
                         <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 bg-emerald-400 rounded-full ring-2 ring-white dark:ring-zinc-950" />
                       </div>
+
+                      <ChevronDown className="h-4 w-4 text-zinc-400" />
+
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 mt-3 w-48 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl py-1 z-[80]">
+                        {userMenuItems.map((item) => (
+                          <Link key={item.key} href={item.href} onClick={() => setIsDropdownOpen(false)} className="flex items-center px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors">
+                            <item.icon className="h-4 w-4 mr-2.5 text-zinc-400" /> {item.label}
+                          </Link>
+                        ))}
+                        <hr className="my-1 border-zinc-100 dark:border-zinc-900" />
+                        <button onClick={handleLogout} aria-label="Logout" className="w-full flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">
+                          <LogOut className="h-4 w-4 mr-2.5" /> Logout
+                        </button>
+                      </div>
+                    )}
+
                       <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200 hidden md:inline max-w-[80px] truncate">
                         {getUserDisplayName().split(" ")[0]}
                       </span>
@@ -460,6 +497,8 @@ export function Navbar() {
                     <AnimatePresence>
                       {isDropdownOpen && (
                         <motion.div
+                          id="profile-menu"
+                          role="menu"
                           variants={dropdownVariants}
                           initial="hidden" animate="visible" exit="exit"
                           className={`${dropdownPanel} w-52 py-1.5`}
@@ -473,6 +512,7 @@ export function Navbar() {
                             <Link
                               key={item.key}
                               href={item.href}
+                              role="menuitem"
                               onClick={() => setIsDropdownOpen(false)}
                               className="flex items-center px-4 py-2.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-white/5 transition-colors gap-2.5"
                             >
@@ -482,6 +522,8 @@ export function Navbar() {
                           ))}
                           <div className="my-1 border-t border-zinc-100/60 dark:border-white/6" />
                           <button
+                            type="button"
+                            role="menuitem"
                             onClick={handleLogout}
                             className="w-full flex items-center px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/8 transition-colors gap-2.5"
                           >
@@ -490,6 +532,7 @@ export function Navbar() {
                         </motion.div>
                       )}
                     </AnimatePresence>
+
                   </div>
                 </div>
               ) : (
@@ -614,11 +657,10 @@ export function Navbar() {
                       <Link
                         href={item.href}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                          isActive
+                        className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive
                             ? "bg-blue-50 dark:bg-blue-600/15 text-blue-600 dark:text-blue-400"
                             : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-white/5"
-                        }`}
+                          }`}
                       >
                         <item.icon className={`h-4 w-4 ${isActive ? "text-blue-500" : "text-zinc-400"}`} />
                         {item.label}

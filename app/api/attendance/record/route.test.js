@@ -15,7 +15,11 @@ jest.mock("@/lib/firebase-admin", () => ({
 }));
 
 jest.mock("@/lib/gamification-service", () => ({
-  awardXp: jest.fn(),
+  awardXp: jest.fn().mockResolvedValue({ xpAwarded: 50, newLevel: null }),
+}));
+
+jest.mock("@/lib/dateUtils", () => ({
+  getLocalDateKey: jest.fn(() => "2026-05-25"),
 }));
 
 jest.mock("firebase-admin/firestore", () => ({

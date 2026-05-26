@@ -5,6 +5,7 @@ import { withErrorHandler, parseJSON } from "@/lib/error-handler";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 const noticeSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -22,7 +23,6 @@ async function publishNotice(request) {
 
   const body = await parseJSON(request, 1024 * 50);
   const validData = noticeSchema.parse(body);
-  const adminDb = getAdminDb();
 
   const newNotice = {
     ...validData,
