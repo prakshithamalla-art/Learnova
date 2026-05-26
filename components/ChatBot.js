@@ -602,13 +602,13 @@ export default function LearnovaChatbot() {
         </div>
 
         <div className="flex items-center space-x-1">
-          <button onClick={clearChat} className="hover:bg-white/20 p-2 rounded-lg transition-colors" title="Clear chat">
+          <button onClick={clearChat} className="hover:bg-white/20 p-2 rounded-lg transition-colors" title="Clear chat" aria-label="Clear chat">
             <RefreshCw size={16} />
           </button>
-          <button onClick={() => setTheme(isDarkMode ? "light" : "dark")} className="hover:bg-white/20 p-2 rounded-lg transition-colors" title="Toggle theme">
+          <button onClick={() => setTheme(isDarkMode ? "light" : "dark")} className="hover:bg-white/20 p-2 rounded-lg transition-colors" title="Toggle theme" aria-label="Toggle theme">
             {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
           </button>
-          <button onClick={() => setIsMinimized(!isMinimized)} className="hover:bg-white/20 p-2 rounded-lg transition-colors" title={isMinimized ? "Expand" : "Minimize"}>
+          <button onClick={() => setIsMinimized(!isMinimized)} className="hover:bg-white/20 p-2 rounded-lg transition-colors" title={isMinimized ? "Expand" : "Minimize"} aria-label={isMinimized ? "Expand chat" : "Minimize chat"}>
             {isMinimized ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
           </button>
           <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-2 sm:p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" title="Close" aria-label="Close chat">
