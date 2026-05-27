@@ -102,7 +102,11 @@ export const createUserProfile = async (user, role, additionalData = {}) => {
   await setDoc(doc(db, "users", user.uid), userProfile);
 
   // Initialize their empty dashboard stats
+  try {
   await initializeUserStats(user.uid);
+} catch (error) {
+  console.log("Stats init failed", error);
+}
 
   return userProfile;
 };
