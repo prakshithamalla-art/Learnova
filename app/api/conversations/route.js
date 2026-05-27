@@ -1,7 +1,7 @@
 import { connectDb } from "@/lib/mongodb";
 import { jsonSuccess } from "@/lib/api-response";
 import { z } from "zod";
-import xss from "xss";
+
 import { withErrorHandler } from "@/lib/error-handler";
 import { requireAuth } from "@/lib/rbac";
 import { AppError, ValidationError } from "@/lib/errors";
@@ -16,11 +16,14 @@ export const dynamic = "force-dynamic";
  */
 const sanitizeText = (text) => {
   if (typeof text !== "string") return "";
-  return xss(text, {
-    whiteList: {}, // Strip all standard HTML tags completely
-    stripIgnoreTag: true,
-    stripIgnoreTagBody: ["script", "style", "iframe", "object", "embed"],
-  }).trim();
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .replace(/\//g, "&#x2F;")
+    .trim();
 };
 
 const conversationSchema = z.object({
